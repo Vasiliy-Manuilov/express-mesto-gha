@@ -1,13 +1,13 @@
 const router = require('express').Router();
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
-const { NOT_FOUND } = require('../utils/errors');
+const NotFoundError = require('../errors/NotFoundError');
 
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
 
-router.use((req, res) => {
-  res.status(NOT_FOUND).send({ message: 'Сервер не найден' });
+router.use((req, res, next) => {
+  next(new NotFoundError('Запрашиваемая страница не существует'));
 });
 
 module.exports = router;
