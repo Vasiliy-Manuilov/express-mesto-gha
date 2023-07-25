@@ -15,8 +15,9 @@ app.use(helmet());
 
 app.use(bodyParser.json());
 app.post('/signup', createUser);
-app.post('/signin', login);
 app.use(cookieParser());
+app.post('/signin', login);
+// app.use(cookieParser());
 app.use(auth);
 app.use(routes);
 app.use(errors());

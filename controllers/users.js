@@ -112,13 +112,15 @@ const login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .orFail(() => {
       throw new AuthError('Неправильная почта или пароль');
-    }).then((user) => bcrypt.compare(password, user.password))
-    .then((user) => {
-      if (!user) {
-        throw new AuthError('Неправильная почта или пароль');
+    }).then((user) => {
+      if (bcrypt.compare(password, user.password)) {
+        return user;
       }
+      throw new AuthError('Неправильная почта или пароль');
+    })
+    .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
-      res.cookie('jwt', token, {
+      res.status(200).cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
