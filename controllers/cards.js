@@ -31,10 +31,10 @@ const deleteCard = (req, res, next) => {
       throw new NotFoundError('Карточка с указанным _id не найдена');
     })
     .then((card) => {
-      if (card.owner.toString() === req.user._id) {
-        Card.findByIdAndRemove(cardId).then(() => res.status(200).send(card));
+      if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenError('В доступе отказано');
       }
-      throw new ForbiddenError('В доступе отказано');
+      Card.findByIdAndRemove(cardId).then(() => res.status(200).send(card));
     })
     .catch(next);
 };

@@ -114,7 +114,7 @@ const login = (req, res, next) => {
       throw new AuthError('Неправильная почта или пароль');
     }).then((user) => {
       if (bcrypt.compare(password, user.password)) {
-        return user;
+        return user._id;
       }
       throw new AuthError('Неправильная почта или пароль');
     })
