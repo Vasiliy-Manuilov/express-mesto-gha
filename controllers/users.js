@@ -54,12 +54,18 @@ const createUser = (req, res, next) => {
         name, about, avatar, email, password: hash,
       });
     })
-    .then((user) => res.status(201).send(user))
+    .then((user) => res.status(201).send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+      _id: user._id,
+    }))
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequest('Переданы некорректные данные'));
-      } else if (err.code === 11000) {
+      if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequest('Переданы некорректные данные'));
       }
       next(err);
     });
