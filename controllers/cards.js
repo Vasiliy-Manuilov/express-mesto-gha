@@ -34,7 +34,7 @@ const deleteCard = (req, res, next) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('В доступе отказано');
       }
-      Card.findByIdAndRemove(cardId).then(() => res.status(200).send(card));
+      return Card.findByIdAndRemove(cardId).then(() => res.status(200).send(card));
     })
     .catch(next);
 };
