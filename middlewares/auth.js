@@ -3,13 +3,13 @@ const AuthError = require('../errors/AuthError');
 
 module.exports = (req, res, next) => {
   if (!req.cookies.jwt) {
-    next(new AuthError('Необходима авторизация'));
+    return next(new AuthError('Необходима авторизация'));
   }
   let payload;
   try {
     payload = jwt.verify(req.cookies.jwt, 'super-strong-secret');
   } catch (err) {
-    next(new AuthError('Необходима авторизация'));
+    return next(new AuthError('Необходима авторизация'));
   }
 
   req.user = payload;
